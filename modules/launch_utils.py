@@ -405,7 +405,7 @@ def prepare_environment():
             print(f"Failed to install audioop-lts: {e}")
 
     assets_repo = os.environ.get('ASSETS_REPO', "https://github.com/AUTOMATIC1111/stable-diffusion-webui-assets.git")
-    stable_diffusion_repo = os.environ.get('STABLE_DIFFUSION_REPO', "https://github.com/Stability-AI/stablediffusion.git")
+    stable_diffusion_repo = os.environ.get('STABLE_DIFFUSION_REPO', "https://github.com/trainML/stable-diffusion-2.git") # https://github.com/Stability-AI/stablediffusion.git
     stable_diffusion_xl_repo = os.environ.get('STABLE_DIFFUSION_XL_REPO', "https://github.com/Stability-AI/generative-models.git")
     k_diffusion_repo = os.environ.get('K_DIFFUSION_REPO', 'https://github.com/crowsonkb/k-diffusion.git')
     blip_repo = os.environ.get('BLIP_REPO', 'https://github.com/salesforce/BLIP.git')
