@@ -25,64 +25,64 @@ restricted_opts = {
     "clean_temp_dir_at_start",
 }
 
-categories.register_category("saving", "Saving images")
+categories.register_category("saving", "画像の保存")
 categories.register_category("sd", "Stable Diffusion")
-categories.register_category("ui", "User Interface")
-categories.register_category("system", "System")
-categories.register_category("postprocessing", "Postprocessing")
-categories.register_category("training", "Training")
+categories.register_category("ui", "ユーザーインターフェース")
+categories.register_category("system", "システム")
+categories.register_category("postprocessing", "ポストプロセス")
+categories.register_category("training", "学習(Training)")
 
 options_templates.update(options_section(('saving-images', "Saving images/grids", "saving"), {
-    "samples_save": OptionInfo(True, "Always save all generated images"),
-    "samples_format": OptionInfo('png', 'File format for images', ui_components.DropdownEditable, {"choices": ("png", "jpg", "jpeg", "webp", "avif")}).info("manual input of <a href='https://pillow.readthedocs.io/en/stable/handbook/image-file-formats.html' target='_blank'>other formats</a> is possible, but compatibility is not guaranteed"),
-    "samples_filename_pattern": OptionInfo("", "Images filename pattern", component_args=hide_dirs).link("wiki", "https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Custom-Images-Filename-Name-and-Subdirectory"),
-    "save_images_add_number": OptionInfo(True, "Add number to filename when saving", component_args=hide_dirs),
-    "save_images_replace_action": OptionInfo("Replace", "Saving the image to an existing file", gr.Radio, {"choices": ["Replace", "Add number suffix"], **hide_dirs}),
-    "grid_save": OptionInfo(True, "Always save all generated image grids"),
-    "grid_format": OptionInfo('png', 'File format for grids', ui_components.DropdownEditable, {"choices": ("png", "jpg", "jpeg", "webp", "avif")}).info("manual input of <a href='https://pillow.readthedocs.io/en/stable/handbook/image-file-formats.html' target='_blank'>other formats</a> is possible, but compatibility is not guaranteed"),
-    "grid_extended_filename": OptionInfo(False, "Add extended info (seed, prompt) to filename when saving grid"),
-    "grid_only_if_multiple": OptionInfo(True, "Do not save grids consisting of one picture"),
-    "grid_prevent_empty_spots": OptionInfo(False, "Prevent empty spots in grid (when set to autodetect)"),
-    "grid_zip_filename_pattern": OptionInfo("", "Archive filename pattern", component_args=hide_dirs).link("wiki", "https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Custom-Images-Filename-Name-and-Subdirectory"),
-    "n_rows": OptionInfo(-1, "Grid row count; use -1 for autodetect and 0 for it to be same as batch size", gr.Slider, {"minimum": -1, "maximum": 16, "step": 1}),
-    "font": OptionInfo("", "Font for image grids that have text"),
+    "samples_save": OptionInfo(True, "生成された画像を常にすべて保存する"),
+    "samples_format": OptionInfo('png', '画像の保存形式', ui_components.DropdownEditable, {"choices": ("png", "jpg", "jpeg", "webp", "avif")}).info("manual input of <a href='https://pillow.readthedocs.io/en/stable/handbook/image-file-formats.html' target='_blank'>other formats</a> is possible, but compatibility is not guaranteed"),
+    "samples_filename_pattern": OptionInfo("", "画像のファイル名パターン", component_args=hide_dirs).link("wiki", "https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Custom-Images-Filename-Name-and-Subdirectory"),
+    "save_images_add_number": OptionInfo(True, "保存時にファイル名に番号を付与する", component_args=hide_dirs),
+    "save_images_replace_action": OptionInfo("Replace", "既存ファイルへの保存時の動作", gr.Radio, {"choices": ["Replace", "Add number suffix"], **hide_dirs}),
+    "grid_save": OptionInfo(True, "生成されたグリッド画像を常にすべて保存する"),
+    "grid_format": OptionInfo('png', 'グリッド画像の保存形式', ui_components.DropdownEditable, {"choices": ("png", "jpg", "jpeg", "webp", "avif")}).info("manual input of <a href='https://pillow.readthedocs.io/en/stable/handbook/image-file-formats.html' target='_blank'>other formats</a> is possible, but compatibility is not guaranteed"),
+    "grid_extended_filename": OptionInfo(False, "グリッド保存時に拡張情報(シード、プロンプト)をファイル名に追加"),
+    "grid_only_if_multiple": OptionInfo(True, "画像が1枚だけの時はグリッドを保存しない"),
+    "grid_prevent_empty_spots": OptionInfo(False, "グリッドの空きスペースを防ぐ (自動検出時)"),
+    "grid_zip_filename_pattern": OptionInfo("", "アーカイブのファイル名パターン", component_args=hide_dirs).link("wiki", "https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Custom-Images-Filename-Name-and-Subdirectory"),
+    "n_rows": OptionInfo(-1, "グリッドの行数 (-1で自動検出、0でバッチサイズと同じ)", gr.Slider, {"minimum": -1, "maximum": 16, "step": 1}),
+    "font": OptionInfo("", "グリッド内テキストのフォント"),
     "grid_text_active_color": OptionInfo("#000000", "Text color for image grids", ui_components.FormColorPicker, {}),
     "grid_text_inactive_color": OptionInfo("#999999", "Inactive text color for image grids", ui_components.FormColorPicker, {}),
     "grid_background_color": OptionInfo("#ffffff", "Background color for image grids", ui_components.FormColorPicker, {}),
 
-    "save_images_before_face_restoration": OptionInfo(False, "Save a copy of image before doing face restoration."),
-    "save_images_before_highres_fix": OptionInfo(False, "Save a copy of image before applying highres fix."),
-    "save_images_before_color_correction": OptionInfo(False, "Save a copy of image before applying color correction to img2img results"),
-    "save_mask": OptionInfo(False, "For inpainting, save a copy of the greyscale mask"),
-    "save_mask_composite": OptionInfo(False, "For inpainting, save a masked composite"),
-    "jpeg_quality": OptionInfo(80, "Quality for saved jpeg and avif images", gr.Slider, {"minimum": 1, "maximum": 100, "step": 1}),
-    "webp_lossless": OptionInfo(False, "Use lossless compression for webp images"),
-    "export_for_4chan": OptionInfo(True, "Save copy of large images as JPG").info("if the file size is above the limit, or either width or height are above the limit"),
+    "save_images_before_face_restoration": OptionInfo(False, "顔補正を行う前の画像をコピー保存する"),
+    "save_images_before_highres_fix": OptionInfo(False, "Hires fixを適用する前の画像をコピー保存する"),
+    "save_images_before_color_correction": OptionInfo(False, "img2imgの色補正を行う前の画像をコピー保存する"),
+    "save_mask": OptionInfo(False, "インペイント時、グレースケールのマスク画像をコピー保存する"),
+    "save_mask_composite": OptionInfo(False, "インペイント時、合成された画像を保存する"),
+    "jpeg_quality": OptionInfo(80, "JPEG/AVIF画像の保存品質", gr.Slider, {"minimum": 1, "maximum": 100, "step": 1}),
+    "webp_lossless": OptionInfo(False, "WebP画像に可逆圧縮を使用する"),
+    "export_for_4chan": OptionInfo(True, "大きな画像のコピーをJPGとして保存").info("if the file size is above the limit, or either width or height are above the limit"),
     "img_downscale_threshold": OptionInfo(4.0, "File size limit for the above option, MB", gr.Number),
     "target_side_length": OptionInfo(4000, "Width/height limit for the above option, in pixels", gr.Number),
-    "img_max_size_mp": OptionInfo(200, "Maximum image size", gr.Number).info("in megapixels"),
+    "img_max_size_mp": OptionInfo(200, "最大画像サイズ(MP)", gr.Number).info("in megapixels"),
 
-    "use_original_name_batch": OptionInfo(True, "Use original name for output filename during batch process in extras tab"),
-    "use_upscaler_name_as_suffix": OptionInfo(False, "Use upscaler name as filename suffix in the extras tab"),
-    "save_selected_only": OptionInfo(True, "When using 'Save' button, only save a single selected image"),
-    "save_write_log_csv": OptionInfo(True, "Write log.csv when saving images using 'Save' button"),
-    "save_init_img": OptionInfo(False, "Save init images when using img2img"),
+    "use_original_name_batch": OptionInfo(True, "Extrasタブのバッチ処理で元のファイル名を出力に使用"),
+    "use_upscaler_name_as_suffix": OptionInfo(False, "Extrasタブでファイル名の末尾にアップスケーラー名を付与"),
+    "save_selected_only": OptionInfo(True, "保存ボタン使用時、選択された1枚のみ保存"),
+    "save_write_log_csv": OptionInfo(True, "保存ボタン使用時に log.csv を書き込む"),
+    "save_init_img": OptionInfo(False, "img2img使用時に元画像を保存する"),
 
-    "temp_dir":  OptionInfo("", "Directory for temporary images; leave empty for default"),
-    "clean_temp_dir_at_start": OptionInfo(False, "Cleanup non-default temporary directory when starting webui"),
+    "temp_dir":  OptionInfo("", "一時画像の保存ディレクトリ (空欄でデフォルト)"),
+    "clean_temp_dir_at_start": OptionInfo(False, "起動時に非デフォルトの一時ディレクトリをクリーンアップ"),
 
-    "save_incomplete_images": OptionInfo(False, "Save incomplete images").info("save images that has been interrupted in mid-generation; even if not saved, they will still show up in webui output."),
+    "save_incomplete_images": OptionInfo(False, "未完成(中断された)画像を保存する").info("save images that has been interrupted in mid-generation; even if not saved, they will still show up in webui output."),
 
-    "notification_audio": OptionInfo(True, "Play notification sound after image generation").info("notification.mp3 should be present in the root directory").needs_reload_ui(),
-    "notification_volume": OptionInfo(100, "Notification sound volume", gr.Slider, {"minimum": 0, "maximum": 100, "step": 1}).info("in %"),
+    "notification_audio": OptionInfo(True, "画像生成終了後に通知音を鳴らす").info("notification.mp3 should be present in the root directory").needs_reload_ui(),
+    "notification_volume": OptionInfo(100, "通知音の音量", gr.Slider, {"minimum": 0, "maximum": 100, "step": 1}).info("in %"),
 }))
 
 options_templates.update(options_section(('saving-paths', "Paths for saving", "saving"), {
-    "outdir_samples": OptionInfo("", "Output directory for images; if empty, defaults to three directories below", component_args=hide_dirs),
+    "outdir_samples": OptionInfo("", "画像の出力ディレクトリ (空欄なら以下の3つを使用)", component_args=hide_dirs),
     "outdir_txt2img_samples": OptionInfo(util.truncate_path(os.path.join(default_output_dir, 'txt2img-images')), 'Output directory for txt2img images', component_args=hide_dirs),
     "outdir_img2img_samples": OptionInfo(util.truncate_path(os.path.join(default_output_dir, 'img2img-images')), 'Output directory for img2img images', component_args=hide_dirs),
     "outdir_extras_samples": OptionInfo(util.truncate_path(os.path.join(default_output_dir, 'extras-images')), 'Output directory for images from extras tab', component_args=hide_dirs),
-    "outdir_grids": OptionInfo("", "Output directory for grids; if empty, defaults to two directories below", component_args=hide_dirs),
+    "outdir_grids": OptionInfo("", "グリッドの出力ディレクトリ (空欄なら以下の2つを使用)", component_args=hide_dirs),
     "outdir_txt2img_grids": OptionInfo(util.truncate_path(os.path.join(default_output_dir, 'txt2img-grids')), 'Output directory for txt2img grids', component_args=hide_dirs),
     "outdir_img2img_grids": OptionInfo(util.truncate_path(os.path.join(default_output_dir, 'img2img-grids')), 'Output directory for img2img grids', component_args=hide_dirs),
     "outdir_save": OptionInfo(util.truncate_path(os.path.join(data_path, 'log', 'images')), "Directory for saving images using the Save button", component_args=hide_dirs),
@@ -90,18 +90,18 @@ options_templates.update(options_section(('saving-paths', "Paths for saving", "s
 }))
 
 options_templates.update(options_section(('saving-to-dirs', "Saving to a directory", "saving"), {
-    "save_to_dirs": OptionInfo(True, "Save images to a subdirectory"),
-    "grid_save_to_dirs": OptionInfo(True, "Save grids to a subdirectory"),
-    "use_save_to_dirs_for_ui": OptionInfo(False, "When using \"Save\" button, save images to a subdirectory"),
-    "directories_filename_pattern": OptionInfo("[date]", "Directory name pattern", component_args=hide_dirs).link("wiki", "https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Custom-Images-Filename-Name-and-Subdirectory"),
-    "directories_max_prompt_words": OptionInfo(8, "Max prompt words for [prompt_words] pattern", gr.Slider, {"minimum": 1, "maximum": 20, "step": 1, **hide_dirs}),
+    "save_to_dirs": OptionInfo(True, "画像をサブディレクトリに保存する"),
+    "grid_save_to_dirs": OptionInfo(True, "グリッドをサブディレクトリに保存する"),
+    "use_save_to_dirs_for_ui": OptionInfo(False, "保存ボタン使用時もサブディレクトリに保存"),
+    "directories_filename_pattern": OptionInfo("[date]", "ディレクトリ名のパターン", component_args=hide_dirs).link("wiki", "https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Custom-Images-Filename-Name-and-Subdirectory"),
+    "directories_max_prompt_words": OptionInfo(8, "[prompt_words]パターンの最大単語数", gr.Slider, {"minimum": 1, "maximum": 20, "step": 1, **hide_dirs}),
 }))
 
 options_templates.update(options_section(('upscaling', "Upscaling", "postprocessing"), {
-    "unload_sd_during_upscale": OptionInfo(False, "Unload SD Model from VRAM to RAM during upscale"),
-    "ESRGAN_tile": OptionInfo(256, "Tile size for ESRGAN upscalers.", gr.Slider, {"minimum": 0, "maximum": 4096, "step": 16}).info("0 = no tiling"),
-    "ESRGAN_tile_overlap": OptionInfo(32, "Tile overlap for ESRGAN upscalers.", gr.Slider, {"minimum": 0, "maximum": 2048, "step": 8}).info("Low values = visible seam"),
-    "RCAN_tile": OptionInfo(512, "Tile size for RCAN upscaler. 0 = no tiling.", gr.Slider, {"minimum": 0, "maximum": 4096, "step": 16}),
+    "unload_sd_during_upscale": OptionInfo(False, "アップスケール中はSDモデルをVRAMからRAMへ退避"),
+    "ESRGAN_tile": OptionInfo(256, "ESRGANアップスケーラーのタイルサイズ", gr.Slider, {"minimum": 0, "maximum": 4096, "step": 16}).info("0 = no tiling"),
+    "ESRGAN_tile_overlap": OptionInfo(32, "ESRGANアップスケーラーのタイル重複幅", gr.Slider, {"minimum": 0, "maximum": 2048, "step": 8}).info("Low values = visible seam"),
+    "RCAN_tile": OptionInfo(512, "RCANアップスケーラーのタイルサイズ (0=なし)", gr.Slider, {"minimum": 0, "maximum": 4096, "step": 16}),
     "RCAN_tile_overlap": OptionInfo(32, "Tile overlap for RCAN upscaler. Higher values = fewer artifacts but slower processing.", gr.Slider, {"minimum": 0, "maximum": 2048, "step": 8}),
     "PLKSR_tile": OptionInfo(512, "Tile size for PLKSR upscaler. 0 = no tiling.", gr.Slider, {"minimum": 0, "maximum": 2048, "step": 64}),
     "PLKSR_tile_overlap": OptionInfo(32, "Tile overlap for PLKSR upscaler. Higher values = fewer artifacts but slower processing.", gr.Slider, {"minimum": 0, "maximum": 256, "step": 16}),
@@ -122,29 +122,29 @@ options_templates.update(options_section(('upscaling', "Upscaling", "postprocess
     "realesrgan_enabled_models": OptionInfo(["R-ESRGAN 4x+", "R-ESRGAN 4x+ Anime6B"], "Select which Real-ESRGAN models to show in the web UI.", gr.CheckboxGroup, lambda: {"choices": shared_items.realesrgan_models_names()}),
     "dat_enabled_models": OptionInfo(["DAT x2", "DAT x3", "DAT x4"], "Select which DAT models to show in the web UI.", gr.CheckboxGroup, lambda: {"choices": shared_items.dat_models_names()}),
     "DAT_tile": OptionInfo(192, "Tile size for DAT upscalers.", gr.Slider, {"minimum": 0, "maximum": 512, "step": 16}).info("0 = no tiling"),
-    "upscaler_for_img2img": OptionInfo(None, "Upscaler for img2img", gr.Dropdown, lambda: {"choices": [x.name for x in shared.sd_upscalers]}),
+    "upscaler_for_img2img": OptionInfo(None, "img2img用アップスケーラー", gr.Dropdown, lambda: {"choices": [x.name for x in shared.sd_upscalers]}),
     "set_scale_by_when_changing_upscaler": OptionInfo(False, "Automatically set the Scale by factor based on the name of the selected Upscaler."),
 }))
 
 options_templates.update(options_section(('face-restoration', "Face restoration", "postprocessing"), {
-    "face_restoration": OptionInfo(False, "Restore faces", infotext='Face restoration').info("will use a third-party model on generation result to reconstruct faces"),
-    "face_restoration_model": OptionInfo("CodeFormer", "Face restoration model", gr.Radio, lambda: {"choices": [x.name() for x in shared.face_restorers]}),
-    "code_former_weight": OptionInfo(0.5, "CodeFormer weight", gr.Slider, {"minimum": 0, "maximum": 1, "step": 0.01}).info("0 = maximum effect; 1 = minimum effect"),
-    "face_restoration_unload": OptionInfo(False, "Move face restoration model from VRAM into RAM after processing"),
+    "face_restoration": OptionInfo(False, "顔の修復(Face restoration)", infotext='Face restoration').info("will use a third-party model on generation result to reconstruct faces"),
+    "face_restoration_model": OptionInfo("CodeFormer", "顔修復モデル", gr.Radio, lambda: {"choices": [x.name() for x in shared.face_restorers]}),
+    "code_former_weight": OptionInfo(0.5, "CodeFormerの適用強度", gr.Slider, {"minimum": 0, "maximum": 1, "step": 0.01}).info("0 = maximum effect; 1 = minimum effect"),
+    "face_restoration_unload": OptionInfo(False, "処理後に顔修復モデルをVRAMからRAMへ移動"),
 }))
 
 options_templates.update(options_section(('system', "System", "system"), {
-    "auto_launch_browser": OptionInfo("Local", "Automatically open webui in browser on startup", gr.Radio, lambda: {"choices": ["Disable", "Local", "Remote"]}),
-    "enable_console_prompts": OptionInfo(shared.cmd_opts.enable_console_prompts, "Print prompts to console when generating with txt2img and img2img."),
-    "show_warnings": OptionInfo(False, "Show warnings in console.").needs_reload_ui(),
+    "auto_launch_browser": OptionInfo("Local", "起動時にブラウザでWebUIを自動的に開く", gr.Radio, lambda: {"choices": ["Disable", "Local", "Remote"]}),
+    "enable_console_prompts": OptionInfo(shared.cmd_opts.enable_console_prompts, "生成時にプロンプトをコンソールに出力する"),
+    "show_warnings": OptionInfo(False, "コンソールに警告を表示する").needs_reload_ui(),
     "show_gradio_deprecation_warnings": OptionInfo(True, "Show gradio deprecation warnings in console.").needs_reload_ui(),
-    "memmon_poll_rate": OptionInfo(8, "VRAM usage polls per second during generation.", gr.Slider, {"minimum": 0, "maximum": 40, "step": 1}).info("0 = disable"),
-    "samples_log_stdout": OptionInfo(False, "Always print all generation info to standard output"),
-    "multiple_tqdm": OptionInfo(True, "Add a second progress bar to the console that shows progress for an entire job."),
+    "memmon_poll_rate": OptionInfo(8, "生成中のVRAM使用率ポーリング頻度(秒間回数)", gr.Slider, {"minimum": 0, "maximum": 40, "step": 1}).info("0 = disable"),
+    "samples_log_stdout": OptionInfo(False, "常にすべての生成情報を標準出力に表示"),
+    "multiple_tqdm": OptionInfo(True, "コンソールにジョブ全体の進捗バーを追加"),
     "enable_upscale_progressbar": OptionInfo(True, "Show a progress bar in the console for tiled upscaling."),
     "print_hypernet_extra": OptionInfo(False, "Print extra hypernetwork information to console."),
-    "list_hidden_files": OptionInfo(True, "Load models/files in hidden directories").info("directory is hidden if its name starts with \".\""),
-    "disable_mmap_load_safetensors": OptionInfo(False, "Disable memmapping for loading .safetensors files.").info("fixes very slow loading speed in some cases"),
+    "list_hidden_files": OptionInfo(True, "隠しディレクトリ内のモデル/ファイルを読み込む").info("directory is hidden if its name starts with \".\""),
+    "disable_mmap_load_safetensors": OptionInfo(False, ".safetensors読み込み時のメモリマッピングを無効化").info("fixes very slow loading speed in some cases"),
     "hide_ldm_prints": OptionInfo(True, "Prevent Stability-AI's ldm/sgm modules from printing noise to console."),
     "dump_stacks_on_signal": OptionInfo(False, "Print stack traces before exiting the program with ctrl+c."),
     "concurrent_git_fetch_limit": OptionInfo(16, "Number of simultaneous extension update checks ", gr.Slider, {"step": 1, "minimum": 1, "maximum": 100}).info("reduce extension update check time"),
@@ -158,7 +158,7 @@ Each generation writes its own profile to one file, overwriting previous.
 The file can be viewed in <a href="chrome:tracing">Chrome</a>, or on a <a href="https://ui.perfetto.dev/">Perfetto</a> web site.
 Warning: writing profile can take a lot of time, up to 30 seconds, and the file itelf can be around 500MB in size.
 """),
-    "profiling_enable": OptionInfo(False, "Enable profiling"),
+    "profiling_enable": OptionInfo(False, "プロファイリングを有効化"),
     "profiling_activities": OptionInfo(["CPU"], "Activities", gr.CheckboxGroup, {"choices": ["CPU", "CUDA"]}),
     "profiling_record_shapes": OptionInfo(True, "Record shapes"),
     "profiling_profile_memory": OptionInfo(True, "Profile memory"),
@@ -167,16 +167,16 @@ Warning: writing profile can take a lot of time, up to 30 seconds, and the file 
 }))
 
 options_templates.update(options_section(('API', "API", "system"), {
-    "api_enable_requests": OptionInfo(True, "Allow http:// and https:// URLs for input images in API", restrict_api=True),
+    "api_enable_requests": OptionInfo(True, "APIで入力画像へのhttp/https URLを許可", restrict_api=True),
     "api_forbid_local_requests": OptionInfo(True, "Forbid URLs to local resources", restrict_api=True),
     "api_useragent": OptionInfo("", "User agent for requests", restrict_api=True),
 }))
 
 options_templates.update(options_section(('training', "Training", "training"), {
-    "unload_models_when_training": OptionInfo(False, "Move VAE and CLIP to RAM when training if possible. Saves VRAM."),
-    "pin_memory": OptionInfo(False, "Turn on pin_memory for DataLoader. Makes training slightly faster but can increase memory usage."),
+    "unload_models_when_training": OptionInfo(False, "学習時、可能ならVAEとCLIPをRAMへ退避 (VRAM節約)"),
+    "pin_memory": OptionInfo(False, "DataLoaderのpin_memoryを有効化 (高速化/メモリ増)"),
     "save_optimizer_state": OptionInfo(False, "Saves Optimizer state as separate *.optim file. Training of embedding or HN can be resumed with the matching optim file."),
-    "save_training_settings_to_txt": OptionInfo(True, "Save textual inversion and hypernet settings to a text file whenever training starts."),
+    "save_training_settings_to_txt": OptionInfo(True, "学習開始時に設定をテキストファイルに保存"),
     "dataset_filename_word_regex": OptionInfo("", "Filename word regex"),
     "dataset_filename_join_string": OptionInfo(" ", "Filename join string"),
     "training_image_repeats_per_epoch": OptionInfo(1, "Number of repeats for a single input image per epoch; used only for displaying epoch number", gr.Number, {"precision": 0}),
@@ -189,22 +189,22 @@ options_templates.update(options_section(('training', "Training", "training"), {
 
 options_templates.update(options_section(('sd', "Stable Diffusion", "sd"), {
     "sd_model_checkpoint": OptionInfo(None, "Stable Diffusion checkpoint", gr.Dropdown, lambda: {"choices": shared_items.list_checkpoint_tiles(shared.opts.sd_checkpoint_dropdown_use_short)}, refresh=shared_items.refresh_checkpoints, infotext='Model hash'),
-    "sd_checkpoints_limit": OptionInfo(1, "Maximum number of checkpoints loaded at the same time", gr.Slider, {"minimum": 1, "maximum": 10, "step": 1}),
-    "sd_checkpoints_keep_in_cpu": OptionInfo(True, "Only keep one model on device").info("will keep models other than the currently used one in RAM rather than VRAM"),
+    "sd_checkpoints_limit": OptionInfo(1, "同時にロードするチェックポイントの最大数", gr.Slider, {"minimum": 1, "maximum": 10, "step": 1}),
+    "sd_checkpoints_keep_in_cpu": OptionInfo(True, "デバイス上には1つのモデルのみ保持する").info("will keep models other than the currently used one in RAM rather than VRAM"),
     "sd_checkpoint_cache": OptionInfo(0, "Checkpoints to cache in RAM", gr.Slider, {"minimum": 0, "maximum": 10, "step": 1}).info("obsolete; set to 0 and use the two settings above instead"),
     "sd_unet": OptionInfo("Automatic", "SD Unet", gr.Dropdown, lambda: {"choices": shared_items.sd_unet_items()}, refresh=shared_items.refresh_unet_list).info("choose Unet model: Automatic = use one with same filename as checkpoint; None = use Unet from checkpoint"),
-    "sd_text_encoder": OptionInfo("Automatic", "Text Encoder", gr.Dropdown, lambda: {"choices": shared_items.sd_text_encoder_items()}, refresh=shared_items.refresh_text_encoder_list).info("choose Text Encoder model: Automatic = use one with same filename as checkpoint; None = use Text Encoder from checkpoint"),
-    "enable_quantization": OptionInfo(False, "Enable quantization in K samplers for sharper and cleaner results. This may change existing seeds").needs_reload_ui(),
-    "emphasis": OptionInfo("Original", "Emphasis mode", gr.Radio, lambda: {"choices": [x.name for x in sd_emphasis.options]}, infotext="Emphasis").info("makes it possible to make model to pay (more:1.1) or (less:0.9) attention to text when you use the syntax in prompt; " + sd_emphasis.get_options_descriptions()),
-    "enable_batch_seeds": OptionInfo(True, "Make K-diffusion samplers produce same images in a batch as when making a single image"),
-    "comma_padding_backtrack": OptionInfo(20, "Prompt word wrap length limit", gr.Slider, {"minimum": 0, "maximum": 74, "step": 1}).info("in tokens - for texts shorter than specified, if they don't fit into 75 token limit, move them to the next 75 token chunk"),
-    "sdxl_clip_l_skip": OptionInfo(False, "Clip skip SDXL", gr.Checkbox).info("Enable Clip skip for the secondary clip model in sdxl. Has no effect on SD 1.5 or SD 2.0/2.1."),
+    "sd_text_encoder": OptionInfo("Automatic", "テキストエンコーダー", gr.Dropdown, lambda: {"choices": shared_items.sd_text_encoder_items()}, refresh=shared_items.refresh_text_encoder_list).info("choose Text Encoder model: Automatic = use one with same filename as checkpoint; None = use Text Encoder from checkpoint"),
+    "enable_quantization": OptionInfo(False, "K-Samplersで量子化を有効化 (鮮明化・シード変化の可能性)").needs_reload_ui(),
+    "emphasis": OptionInfo("Original", "強調モード(Emphasis)", gr.Radio, lambda: {"choices": [x.name for x in sd_emphasis.options]}, infotext="Emphasis").info("makes it possible to make model to pay (more:1.1) or (less:0.9) attention to text when you use the syntax in prompt; " + sd_emphasis.get_options_descriptions()),
+    "enable_batch_seeds": OptionInfo(True, "K-diffusionサンプラーでバッチ生成時も単体生成と同じ画像を作る"),
+    "comma_padding_backtrack": OptionInfo(20, "プロンプトの単語折り返し制限(トークン)", gr.Slider, {"minimum": 0, "maximum": 74, "step": 1}).info("in tokens - for texts shorter than specified, if they don't fit into 75 token limit, move them to the next 75 token chunk"),
+    "sdxl_clip_l_skip": OptionInfo(False, "SDXLでClip skipを有効化", gr.Checkbox).info("Enable Clip skip for the secondary clip model in sdxl. Has no effect on SD 1.5 or SD 2.0/2.1."),
     "CLIP_stop_at_last_layers": OptionInfo(1, "Clip skip", gr.Slider, {"minimum": 1, "maximum": 12, "step": 1}, infotext="Clip skip").link("wiki", "https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Features#clip-skip").info("ignore last layers of CLIP network; 1 ignores none, 2 ignores one layer"),
-    "upcast_attn": OptionInfo(False, "Upcast cross attention layer to float32"),
-    "randn_source": OptionInfo("GPU", "Random number generator source.", gr.Radio, {"choices": ["GPU", "CPU", "NV"]}, infotext="RNG").info("changes seeds drastically; use CPU to produce the same picture across different videocard vendors; use NV to produce same picture as on NVidia videocards"),
-    "tiling": OptionInfo(False, "Tiling", infotext='Tiling').info("produce a tileable picture"),
-    "hires_fix_refiner_pass": OptionInfo("second pass", "Hires fix: which pass to enable refiner for", gr.Radio, {"choices": ["first pass", "second pass", "both passes"]}, infotext="Hires refiner"),
-    "cond_stage_model_device_compatibility_check": OptionInfo(False, "Perform device compatibility check for conditional stage model. Enables broader hardware compatibility by falling back to CPU if GPU doesn't support required data types. May improve stability on some systems, but can significantly slow down model loading and potentially impact generation speed.", gr.Checkbox, {"interactive": True}),
+    "upcast_attn": OptionInfo(False, "Cross attentionレイヤーをfloat32にキャスト"),
+    "randn_source": OptionInfo("GPU", "乱数生成ソース", gr.Radio, {"choices": ["GPU", "CPU", "NV"]}, infotext="RNG").info("changes seeds drastically; use CPU to produce the same picture across different videocard vendors; use NV to produce same picture as on NVidia videocards"),
+    "tiling": OptionInfo(False, "タイリング(Tiling)", infotext='Tiling').info("produce a tileable picture"),
+    "hires_fix_refiner_pass": OptionInfo("second pass", "Hires fix: Refinerを有効にするパス", gr.Radio, {"choices": ["first pass", "second pass", "both passes"]}, infotext="Hires refiner"),
+    "cond_stage_model_device_compatibility_check": OptionInfo(False, "条件付きステージモデルのデバイス互換性チェックを行う (安定性向上/ロード低速化)", gr.Checkbox, {"interactive": True}),
 }))
 
 options_templates.update(options_section(('sdxl', "Stable Diffusion XL", "sd"), {
@@ -215,7 +215,7 @@ options_templates.update(options_section(('sdxl', "Stable Diffusion XL", "sd"), 
 }))
 
 options_templates.update(options_section(('sd3', "Stable Diffusion 3", "sd"), {
-    "sd3_enable_t5": OptionInfo(False, "Enable T5").info("load T5 text encoder; increases VRAM use by a lot, potentially improving quality of generation; requires model reload to apply"),
+    "sd3_enable_t5": OptionInfo(False, "T5を有効化 (SD3用)").info("load T5 text encoder; increases VRAM use by a lot, potentially improving quality of generation; requires model reload to apply"),
 }))
 
 options_templates.update(options_section(('vae', "VAE", "sd"), {
@@ -227,11 +227,11 @@ For img2img, VAE is used to process user's input image before the sampling, and 
 """),
     "sd_vae_checkpoint_cache": OptionInfo(0, "VAE Checkpoints to cache in RAM", gr.Slider, {"minimum": 0, "maximum": 10, "step": 1}),
     "sd_vae": OptionInfo("Automatic", "SD VAE", gr.Dropdown, lambda: {"choices": shared_items.sd_vae_items()}, refresh=shared_items.refresh_vae_list, infotext='VAE').info("choose VAE model: Automatic = use one with same filename as checkpoint; None = use VAE from checkpoint"),
-    "sd_vae_overrides_per_model_preferences": OptionInfo(True, "Selected VAE overrides per-model preferences").info("you can set per-model VAE either by editing user metadata for checkpoints, or by making the VAE have same name as checkpoint"),
-    "auto_vae_precision_bfloat16": OptionInfo(False, "Automatically convert VAE to bfloat16").info("triggers when a tensor with NaNs is produced in VAE; disabling the option in this case will result in a black square image; if enabled, overrides the option below"),
-    "auto_vae_precision": OptionInfo(True, "Automatically revert VAE to 32-bit floats").info("triggers when a tensor with NaNs is produced in VAE; disabling the option in this case will result in a black square image"),
-    "sd_vae_encode_method": OptionInfo("Full", "VAE type for encode", gr.Radio, {"choices": ["Full", "TAESD"]}, infotext='VAE Encoder').info("method to encode image to latent (use in img2img, hires-fix or inpaint mask)"),
-    "sd_vae_decode_method": OptionInfo("Full", "VAE type for decode", gr.Radio, {"choices": ["Full", "TAESD"]}, infotext='VAE Decoder').info("method to decode latent to image"),
+    "sd_vae_overrides_per_model_preferences": OptionInfo(True, "選択したVAEをモデルごとの設定より優先する").info("you can set per-model VAE either by editing user metadata for checkpoints, or by making the VAE have same name as checkpoint"),
+    "auto_vae_precision_bfloat16": OptionInfo(False, "VAEを自動的にbfloat16に変換").info("triggers when a tensor with NaNs is produced in VAE; disabling the option in this case will result in a black square image; if enabled, overrides the option below"),
+    "auto_vae_precision": OptionInfo(True, "VAEを自動的に32-bit floatに戻す").info("triggers when a tensor with NaNs is produced in VAE; disabling the option in this case will result in a black square image"),
+    "sd_vae_encode_method": OptionInfo("Full", "エンコード用VAEタイプ", gr.Radio, {"choices": ["Full", "TAESD"]}, infotext='VAE Encoder').info("method to encode image to latent (use in img2img, hires-fix or inpaint mask)"),
+    "sd_vae_decode_method": OptionInfo("Full", "デコード用VAEタイプ", gr.Radio, {"choices": ["Full", "TAESD"]}, infotext='VAE Decoder').info("method to decode latent to image"),
 }))
 
 options_templates.update(options_section(('sd_sampling', "SD Sampling backend for A1111 samplers", "sd"), {
@@ -250,39 +250,39 @@ options_templates.update(options_section(('sd_sampling', "SD Sampling backend fo
 }))
 
 options_templates.update(options_section(('img2img', "img2img", "sd"), {
-    "inpainting_mask_weight": OptionInfo(1.0, "Inpainting conditioning mask strength", gr.Slider, {"minimum": 0.0, "maximum": 1.0, "step": 0.01}, infotext='Conditional mask weight'),
-    "initial_noise_multiplier": OptionInfo(1.0, "Noise multiplier for img2img", gr.Slider, {"minimum": 0.0, "maximum": 1.5, "step": 0.001}, infotext='Noise multiplier'),
-    "img2img_extra_noise": OptionInfo(0.0, "Extra noise multiplier for img2img and hires fix", gr.Slider, {"minimum": 0.0, "maximum": 1.0, "step": 0.01}, infotext='Extra noise').info("0 = disabled (default); should be lower than denoising strength"),
-    "img2img_color_correction": OptionInfo(False, "Apply color correction to img2img results to match original colors."),
-    "img2img_fix_steps": OptionInfo(False, "With img2img, do exactly the amount of steps the slider specifies.").info("normally you'd do less with less denoising"),
-    "img2img_background_color": OptionInfo("#ffffff", "With img2img, fill transparent parts of the input image with this color.", ui_components.FormColorPicker, {}),
-    "img2img_editor_height": OptionInfo(720, "Height of the image editor", gr.Slider, {"minimum": 80, "maximum": 1600, "step": 1}).info("in pixels").needs_reload_ui(),
+    "inpainting_mask_weight": OptionInfo(1.0, "インペイントの条件付きマスク強度", gr.Slider, {"minimum": 0.0, "maximum": 1.0, "step": 0.01}, infotext='Conditional mask weight'),
+    "initial_noise_multiplier": OptionInfo(1.0, "img2imgのノイズ乗数", gr.Slider, {"minimum": 0.0, "maximum": 1.5, "step": 0.001}, infotext='Noise multiplier'),
+    "img2img_extra_noise": OptionInfo(0.0, "img2img/Hires fixの追加ノイズ乗数", gr.Slider, {"minimum": 0.0, "maximum": 1.0, "step": 0.01}, infotext='Extra noise').info("0 = disabled (default); should be lower than denoising strength"),
+    "img2img_color_correction": OptionInfo(False, "img2imgの結果を元の色に合わせて色補正する"),
+    "img2img_fix_steps": OptionInfo(False, "img2imgでスライダー指定通りのステップ数を実行").info("normally you'd do less with less denoising"),
+    "img2img_background_color": OptionInfo("#ffffff", "img2imgで透明部分をこの色で塗りつぶす", ui_components.FormColorPicker, {}),
+    "img2img_editor_height": OptionInfo(720, "画像エディタの高さ", gr.Slider, {"minimum": 80, "maximum": 1600, "step": 1}).info("in pixels").needs_reload_ui(),
     "img2img_sketch_default_brush_color": OptionInfo("#ffffff", "Sketch initial brush color", ui_components.FormColorPicker, {}).info("default brush color of img2img sketch").needs_reload_ui(),
     "img2img_inpaint_mask_brush_color": OptionInfo("#ffffff", "Inpaint mask brush color", ui_components.FormColorPicker,  {}).info("brush color of inpaint mask").needs_reload_ui(),
     "img2img_inpaint_sketch_default_brush_color": OptionInfo("#ffffff", "Inpaint sketch initial brush color", ui_components.FormColorPicker, {}).info("default brush color of img2img inpaint sketch").needs_reload_ui(),
-    "return_mask": OptionInfo(False, "For inpainting, include the greyscale mask in results for web"),
+    "return_mask": OptionInfo(False, "インペイント結果にグレースケールマスクを含める"),
     "return_mask_composite": OptionInfo(False, "For inpainting, include masked composite in results for web"),
-    "img2img_batch_show_results_limit": OptionInfo(32, "Show the first N batch img2img results in UI", gr.Slider, {"minimum": -1, "maximum": 1000, "step": 1}).info('0: disable, -1: show all images. Too many images can cause lag'),
-    "overlay_inpaint": OptionInfo(True, "Overlay original for inpaint").info("when inpainting, overlay the original image over the areas that weren't inpainted."),
+    "img2img_batch_show_results_limit": OptionInfo(32, "img2imgバッチ結果のUI表示数上限", gr.Slider, {"minimum": -1, "maximum": 1000, "step": 1}).info('0: disable, -1: show all images. Too many images can cause lag'),
+    "overlay_inpaint": OptionInfo(True, "インペイントで元画像をオーバーレイ表示").info("when inpainting, overlay the original image over the areas that weren't inpainted."),
 }))
 
 options_templates.update(options_section(('optimizations', "Optimizations", "sd"), {
     # "cross_attention_optimization": OptionInfo("Automatic", "Cross attention optimization", gr.Dropdown, lambda: {"choices": shared_items.cross_attention_optimizations()}),
-    "s_min_uncond": OptionInfo(0.0, "Negative Guidance minimum sigma", gr.Slider, {"minimum": 0.0, "maximum": 15.0, "step": 0.01}, infotext='NGMS').link("PR", "https://github.com/AUTOMATIC1111/stable-diffusion-webui/pull/9177").info("skip negative prompt for some steps when the image is almost ready; 0=disable, higher=faster"),
+    "s_min_uncond": OptionInfo(0.0, "Negative Guidance 最小シグマ(NGMS)", gr.Slider, {"minimum": 0.0, "maximum": 15.0, "step": 0.01}, infotext='NGMS').link("PR", "https://github.com/AUTOMATIC1111/stable-diffusion-webui/pull/9177").info("skip negative prompt for some steps when the image is almost ready; 0=disable, higher=faster"),
     "s_min_uncond_all": OptionInfo(False, "Negative Guidance minimum sigma all steps", infotext='NGMS all steps').info("By default, NGMS above skips every other step; this makes it skip all steps"),
-    "token_merging_ratio": OptionInfo(0.0, "Token merging ratio", gr.Slider, {"minimum": 0.0, "maximum": 0.9, "step": 0.1}, infotext='Token merging ratio').link("PR", "https://github.com/AUTOMATIC1111/stable-diffusion-webui/pull/9256").info("0=disable, higher=faster"),
+    "token_merging_ratio": OptionInfo(0.0, "Token merging 比率", gr.Slider, {"minimum": 0.0, "maximum": 0.9, "step": 0.1}, infotext='Token merging ratio').link("PR", "https://github.com/AUTOMATIC1111/stable-diffusion-webui/pull/9256").info("0=disable, higher=faster"),
     "token_merging_ratio_img2img": OptionInfo(0.0, "Token merging ratio for img2img", gr.Slider, {"minimum": 0.0, "maximum": 0.9, "step": 0.1}).info("only applies if non-zero and overrides above"),
     "token_merging_ratio_hr": OptionInfo(0.0, "Token merging ratio for high-res pass", gr.Slider, {"minimum": 0.0, "maximum": 0.9, "step": 0.1}, infotext='Token merging ratio hr').info("only applies if non-zero and overrides above"),
-    "pad_cond_uncond": OptionInfo(False, "Pad prompt/negative prompt", infotext='Pad conds').info("improves performance when prompt and negative prompt have different lengths; changes seeds"),
+    "pad_cond_uncond": OptionInfo(False, "プロンプト/ネガティブプロンプトのパディング", infotext='Pad conds').info("improves performance when prompt and negative prompt have different lengths; changes seeds"),
     "pad_cond_uncond_v0": OptionInfo(False, "Pad prompt/negative prompt (v0)", infotext='Pad conds v0').info("alternative implementation for the above; used prior to 1.6.0 for DDIM sampler; overrides the above if set; WARNING: truncates negative prompt if it's too long; changes seeds"),
-    "persistent_cond_cache": OptionInfo(True, "Persistent cond cache").info("do not recalculate conds from prompts if prompts have not changed since previous calculation"),
-    "batch_cond_uncond": OptionInfo(True, "Batch cond/uncond").info("do both conditional and unconditional denoising in one batch; uses a bit more VRAM during sampling, but improves speed; previously this was controlled by --always-batch-cond-uncond commandline argument"),
-    "fp8_storage": OptionInfo("Disable", "FP8 weight", gr.Radio, {"choices": ["Disable", "Enable for SDXL", "Enable"]}).info("Use FP8 to store Linear/Conv layers' weight. Require pytorch>=2.1.0."),
-    "cache_fp16_weight": OptionInfo(False, "Cache FP16 weight for LoRA").info("Cache fp16 weight when enabling FP8, will increase the quality of LoRA. Use more system ram."),
+    "persistent_cond_cache": OptionInfo(True, "条件キャッシュを永続化").info("do not recalculate conds from prompts if prompts have not changed since previous calculation"),
+    "batch_cond_uncond": OptionInfo(True, "条件付き/非条件付きをバッチ処理").info("do both conditional and unconditional denoising in one batch; uses a bit more VRAM during sampling, but improves speed; previously this was controlled by --always-batch-cond-uncond commandline argument"),
+    "fp8_storage": OptionInfo("Disable", "FP8ウェイト", gr.Radio, {"choices": ["Disable", "Enable for SDXL", "Enable"]}).info("Use FP8 to store Linear/Conv layers' weight. Require pytorch>=2.1.0."),
+    "cache_fp16_weight": OptionInfo(False, "LoRA用にFP16ウェイトをキャッシュ").info("Cache fp16 weight when enabling FP8, will increase the quality of LoRA. Use more system ram."),
 }))
 
 options_templates.update(options_section(('compatibility', "Compatibility", "sd"), {
-    "auto_backcompat": OptionInfo(True, "Automatic backward compatibility").info("automatically enable options for backwards compatibility when importing generation parameters from infotext that has program version."),
+    "auto_backcompat": OptionInfo(True, "自動後方互換性").info("automatically enable options for backwards compatibility when importing generation parameters from infotext that has program version."),
     "use_old_emphasis_implementation": OptionInfo(False, "Use old emphasis implementation. Can be useful to reproduce old seeds."),
     "use_old_karras_scheduler_sigmas": OptionInfo(False, "Use old karras scheduler sigmas (0.1 to 10)."),
     "no_dpmpp_sde_batch_determinism": OptionInfo(False, "Do not make DPM++ SDE deterministic across different batch sizes."),
@@ -295,7 +295,7 @@ options_templates.update(options_section(('compatibility', "Compatibility", "sd"
 }))
 
 options_templates.update(options_section(('interrogate', "Interrogate"), {
-    "interrogate_keep_models_in_memory": OptionInfo(False, "Keep models in VRAM"),
+    "interrogate_keep_models_in_memory": OptionInfo(False, "モデルをVRAMに保持"),
     "interrogate_return_ranks": OptionInfo(False, "Include ranks of model tags matches in results.").info("booru only"),
     "interrogate_clip_num_beams": OptionInfo(1, "BLIP: num_beams", gr.Slider, {"minimum": 1, "maximum": 16, "step": 1}),
     "interrogate_clip_min_length": OptionInfo(24, "BLIP: minimum description length", gr.Slider, {"minimum": 1, "maximum": 128, "step": 1}),
@@ -310,73 +310,73 @@ options_templates.update(options_section(('interrogate', "Interrogate"), {
 }))
 
 options_templates.update(options_section(('extra_networks', "Extra Networks", "sd"), {
-    "extra_networks_show_hidden_directories": OptionInfo(True, "Show hidden directories").info("directory is hidden if its name starts with \".\"."),
+    "extra_networks_show_hidden_directories": OptionInfo(True, "隠しディレクトリを表示").info("directory is hidden if its name starts with \".\"."),
     "extra_networks_dir_button_function": OptionInfo(False, "Add a '/' to the beginning of directory buttons").info("Buttons will display the contents of the selected directory without acting as a search filter."),
     "extra_networks_hidden_models": OptionInfo("When searched", "Show cards for models in hidden directories", gr.Radio, {"choices": ["Always", "When searched", "Never"]}).info('"When searched" option will only show the item when the search string has 4 characters or more'),
-    "extra_networks_default_multiplier": OptionInfo(1.0, "Default multiplier for extra networks", gr.Slider, {"minimum": 0.0, "maximum": 2.0, "step": 0.01}),
-    "extra_networks_card_width": OptionInfo(0, "Card width for Extra Networks").info("in pixels"),
-    "extra_networks_card_height": OptionInfo(0, "Card height for Extra Networks").info("in pixels"),
-    "extra_networks_card_text_scale": OptionInfo(1.0, "Card text scale", gr.Slider, {"minimum": 0.0, "maximum": 2.0, "step": 0.01}).info("1 = original size"),
-    "extra_networks_card_show_desc": OptionInfo(True, "Show description on card"),
+    "extra_networks_default_multiplier": OptionInfo(1.0, "拡張ネットワークのデフォルト倍率", gr.Slider, {"minimum": 0.0, "maximum": 2.0, "step": 0.01}),
+    "extra_networks_card_width": OptionInfo(0, "カードの幅 (px)").info("in pixels"),
+    "extra_networks_card_height": OptionInfo(0, "カードの高さ (px)").info("in pixels"),
+    "extra_networks_card_text_scale": OptionInfo(1.0, "カードのテキストサイズ", gr.Slider, {"minimum": 0.0, "maximum": 2.0, "step": 0.01}).info("1 = original size"),
+    "extra_networks_card_show_desc": OptionInfo(True, "カードに説明を表示"),
     "extra_networks_card_description_is_html": OptionInfo(False, "Treat card description as HTML"),
-    "extra_networks_card_order_field": OptionInfo("Path", "Default order field for Extra Networks cards", gr.Dropdown, {"choices": ['Path', 'Name', 'Date Created', 'Date Modified']}).needs_reload_ui(),
+    "extra_networks_card_order_field": OptionInfo("Path", "カードのデフォルト並び順キー", gr.Dropdown, {"choices": ['Path', 'Name', 'Date Created', 'Date Modified']}).needs_reload_ui(),
     "extra_networks_card_order": OptionInfo("Ascending", "Default order for Extra Networks cards", gr.Dropdown, {"choices": ['Ascending', 'Descending']}).needs_reload_ui(),
-    "extra_networks_tree_view_style": OptionInfo("Tree", "Extra Networks directory view style", gr.Radio, {"choices": ["Tree", "Dirs"]}).needs_reload_ui(),
-    "extra_networks_tree_view_default_enabled": OptionInfo(True, "Show the Extra Networks directory view by default").needs_reload_ui(),
+    "extra_networks_tree_view_style": OptionInfo("Tree", "ディレクトリ表示スタイル", gr.Radio, {"choices": ["Tree", "Dirs"]}).needs_reload_ui(),
+    "extra_networks_tree_view_default_enabled": OptionInfo(True, "デフォルトでディレクトリツリーを表示").needs_reload_ui(),
     "extra_networks_tree_view_default_width": OptionInfo(180, "Default width for the Extra Networks directory tree view", gr.Number).needs_reload_ui(),
     "extra_networks_add_text_separator": OptionInfo(" ", "Extra networks separator").info("extra text to add before <...> when adding extra network to prompt"),
     "ui_extra_networks_tab_reorder": OptionInfo("", "Extra networks tab order").needs_reload_ui(),
-    "textual_inversion_print_at_load": OptionInfo(False, "Print a list of Textual Inversion embeddings when loading model"),
-    "textual_inversion_add_hashes_to_infotext": OptionInfo(True, "Add Textual Inversion hashes to infotext"),
-    "sd_hypernetwork": OptionInfo("None", "Add hypernetwork to prompt", gr.Dropdown, lambda: {"choices": ["None", *shared.hypernetworks]}, refresh=shared_items.reload_hypernetworks),
+    "textual_inversion_print_at_load": OptionInfo(False, "モデルロード時にTextual Inversion一覧を表示"),
+    "textual_inversion_add_hashes_to_infotext": OptionInfo(True, "Textual Inversionハッシュをインフォテキストに追加"),
+    "sd_hypernetwork": OptionInfo("None", "Hypernetworkをプロンプトに追加", gr.Dropdown, lambda: {"choices": ["None", *shared.hypernetworks]}, refresh=shared_items.reload_hypernetworks),
     "textual_inversion_image_embedding_data_cache": OptionInfo(False, 'Cache the data of image embeddings').info('potentially increase TI load time at the cost some disk space'),
 }))
 
 options_templates.update(options_section(('ui_prompt_editing', "Prompt editing", "ui"), {
-    "keyedit_precision_attention": OptionInfo(0.1, "Precision for (attention:1.1) when editing the prompt with Ctrl+up/down", gr.Slider, {"minimum": 0.01, "maximum": 0.2, "step": 0.001}),
+    "keyedit_precision_attention": OptionInfo(0.1, "Ctrl+上下での強調(attention)変動幅", gr.Slider, {"minimum": 0.01, "maximum": 0.2, "step": 0.001}),
     "keyedit_precision_extra": OptionInfo(0.05, "Precision for <extra networks:0.9> when editing the prompt with Ctrl+up/down", gr.Slider, {"minimum": 0.01, "maximum": 0.2, "step": 0.001}),
-    "keyedit_delimiters": OptionInfo(r".,\/!?%^*;:{}=`~() ", "Word delimiters when editing the prompt with Ctrl+up/down"),
+    "keyedit_delimiters": OptionInfo(r".,\/!?%^*;:{}=`~() ", "Ctrl+上下編集時の単語区切り文字"),
     "keyedit_delimiters_whitespace": OptionInfo(["Tab", "Carriage Return", "Line Feed"], "Ctrl+up/down whitespace delimiters", gr.CheckboxGroup, lambda: {"choices": ["Tab", "Carriage Return", "Line Feed"]}),
-    "keyedit_move": OptionInfo(True, "Alt+left/right moves prompt elements"),
-    "disable_token_counters": OptionInfo(False, "Disable prompt token counters"),
+    "keyedit_move": OptionInfo(True, "Alt+左右でプロンプト要素を移動"),
+    "disable_token_counters": OptionInfo(False, "プロンプトトークンカウンターを無効化"),
     "include_styles_into_token_counters": OptionInfo(True, "Count tokens of enabled styles").info("When calculating how many tokens the prompt has, also consider tokens added by enabled styles."),
 }))
 
 options_templates.update(options_section(('ui_gallery', "Gallery", "ui"), {
-    "return_grid": OptionInfo(True, "Show grid in gallery"),
-    "do_not_show_images": OptionInfo(False, "Do not show any images in gallery"),
-    "js_modal_lightbox": OptionInfo(True, "Full page image viewer: enable"),
+    "return_grid": OptionInfo(True, "ギャラリーにグリッドを表示"),
+    "do_not_show_images": OptionInfo(False, "ギャラリーに画像を表示しない"),
+    "js_modal_lightbox": OptionInfo(True, "フルページ画像ビューア: 有効化"),
     "js_modal_lightbox_initially_zoomed": OptionInfo(True, "Full page image viewer: show images zoomed in by default"),
     "js_modal_lightbox_gamepad": OptionInfo(False, "Full page image viewer: navigate with gamepad"),
     "js_modal_lightbox_gamepad_repeat": OptionInfo(250, "Full page image viewer: gamepad repeat period").info("in milliseconds"),
     "sd_wui_modal_lightbox_icon_opacity": OptionInfo(1, "Full page image viewer: control icon unfocused opacity", gr.Slider, {"minimum": 0.0, "maximum": 1, "step": 0.01}, onchange=shared.reload_gradio_theme).info('for mouse only').needs_reload_ui(),
     "sd_wui_modal_lightbox_toolbar_opacity": OptionInfo(0.9, "Full page image viewer: tool bar opacity", gr.Slider, {"minimum": 0.0, "maximum": 1, "step": 0.01}, onchange=shared.reload_gradio_theme).info('for mouse only').needs_reload_ui(),
     "gallery_height": OptionInfo("", "Gallery height", gr.Textbox).info("can be any valid CSS value, for example 768px or 20em").needs_reload_ui(),
-    "open_dir_button_choice": OptionInfo("Subdirectory", "What directory the [📂] button opens", gr.Radio, {"choices": ["Output Root", "Subdirectory", "Subdirectory (even temp dir)"]}),
+    "open_dir_button_choice": OptionInfo("Subdirectory", "[📂]ボタンで開くディレクトリ", gr.Radio, {"choices": ["Output Root", "Subdirectory", "Subdirectory (even temp dir)"]}),
     "hires_button_gallery_inset": OptionInfo(False, "Insert [✨] hires button results to gallery").info("when False the original first pass image is replaced by the results"),
 }))
 
 options_templates.update(options_section(('ui_alternatives', "UI alternatives", "ui"), {
-    "compact_prompt_box": OptionInfo(False, "Compact prompt layout").info("puts prompt and negative prompt inside the Generate tab, leaving more vertical space for the image on the right").needs_reload_ui(),
-    "samplers_in_dropdown": OptionInfo(True, "Use dropdown for sampler selection instead of radio group").needs_reload_ui(),
-    "dimensions_and_batch_together": OptionInfo(True, "Show Width/Height and Batch sliders in same row").needs_reload_ui(),
-    "sd_checkpoint_dropdown_use_short": OptionInfo(False, "Checkpoint dropdown: use filenames without paths").info("models in subdirectories like photo/sd15.ckpt will be listed as just sd15.ckpt"),
-    "hires_fix_show_sampler": OptionInfo(False, "Hires fix: show hires checkpoint and sampler selection").needs_reload_ui(),
-    "hires_fix_show_prompts": OptionInfo(False, "Hires fix: show hires prompt and negative prompt").needs_reload_ui(),
-    "txt2img_settings_accordion": OptionInfo(False, "Settings in txt2img hidden under Accordion").needs_reload_ui(),
+    "compact_prompt_box": OptionInfo(False, "コンパクトなプロンプトレイアウト").info("puts prompt and negative prompt inside the Generate tab, leaving more vertical space for the image on the right").needs_reload_ui(),
+    "samplers_in_dropdown": OptionInfo(True, "サンプラー選択にラジオボタンではなくドロップダウンを使用").needs_reload_ui(),
+    "dimensions_and_batch_together": OptionInfo(True, "幅/高さとバッチスライダーを同じ行に表示").needs_reload_ui(),
+    "sd_checkpoint_dropdown_use_short": OptionInfo(False, "チェックポイント選択: パスを除いたファイル名を使用").info("models in subdirectories like photo/sd15.ckpt will be listed as just sd15.ckpt"),
+    "hires_fix_show_sampler": OptionInfo(False, "Hires fix: チェックポイントとサンプラー選択を表示").needs_reload_ui(),
+    "hires_fix_show_prompts": OptionInfo(False, "Hires fix: プロンプトとネガティブプロンプトを表示").needs_reload_ui(),
+    "txt2img_settings_accordion": OptionInfo(False, "txt2imgの設定をアコーディオンに隠す").needs_reload_ui(),
     "img2img_settings_accordion": OptionInfo(False, "Settings in img2img hidden under Accordion").needs_reload_ui(),
-    "interrupt_after_current": OptionInfo(True, "Don't Interrupt in the middle").info("when using Interrupt button, if generating more than one image, stop after the generation of an image has finished, instead of immediately"),
+    "interrupt_after_current": OptionInfo(True, "生成途中の中断を避ける (バッチ完了まで待つ)").info("when using Interrupt button, if generating more than one image, stop after the generation of an image has finished, instead of immediately"),
 }))
 
 options_templates.update(options_section(('ui', "User interface", "ui"), {
-    "localization": OptionInfo("None", "Localization", gr.Dropdown, lambda: {"choices": ["None"] + list(localization.localizations.keys())}, refresh=lambda: localization.list_localizations(cmd_opts.localizations_dir)).needs_reload_ui(),
+    "localization": OptionInfo("None", "言語(Localization)", gr.Dropdown, lambda: {"choices": ["None"] + list(localization.localizations.keys())}, refresh=lambda: localization.list_localizations(cmd_opts.localizations_dir)).needs_reload_ui(),
     "quicksettings_list": OptionInfo(["sd_model_checkpoint", "sd_vae", "CLIP_stop_at_last_layers"], "Quicksettings list", ui_components.DropdownMulti, lambda: {"choices": list(shared.opts.data_labels.keys())}).js("info", "settingsHintsShowQuicksettings").info("setting entries that appear at the top of page rather than in settings tab").needs_reload_ui(),
-    "ui_tab_order": OptionInfo([], "UI tab order", ui_components.DropdownMulti, lambda: {"choices": list(shared.tab_names)}).needs_reload_ui(),
-    "hidden_tabs": OptionInfo([], "Hidden UI tabs", ui_components.DropdownMulti, lambda: {"choices": list(shared.tab_names)}).needs_reload_ui(),
+    "ui_tab_order": OptionInfo([], "UIタブの順序", ui_components.DropdownMulti, lambda: {"choices": list(shared.tab_names)}).needs_reload_ui(),
+    "hidden_tabs": OptionInfo([], "非表示にするUIタブ", ui_components.DropdownMulti, lambda: {"choices": list(shared.tab_names)}).needs_reload_ui(),
     "ui_reorder_list": OptionInfo([], "UI item order for txt2img/img2img tabs", ui_components.DropdownMulti, lambda: {"choices": list(shared_items.ui_reorder_categories())}).info("selected items appear first").needs_reload_ui(),
-    "gradio_theme": OptionInfo("Default", "Gradio theme", ui_components.DropdownEditable, lambda: {"choices": ["Default"] + shared_gradio_themes.gradio_hf_hub_themes}).info("you can also manually enter any of themes from the <a href='https://huggingface.co/spaces/gradio/theme-gallery'>gallery</a>.").needs_reload_ui(),
+    "gradio_theme": OptionInfo("Default", "Gradioテーマ", ui_components.DropdownEditable, lambda: {"choices": ["Default"] + shared_gradio_themes.gradio_hf_hub_themes}).info("you can also manually enter any of themes from the <a href='https://huggingface.co/spaces/gradio/theme-gallery'>gallery</a>.").needs_reload_ui(),
     "gradio_themes_cache": OptionInfo(True, "Cache gradio themes locally").info("disable to update the selected Gradio theme"),
-    "show_progress_in_title": OptionInfo(True, "Show generation progress in window title."),
+    "show_progress_in_title": OptionInfo(True, "ウィンドウタイトルに生成進捗を表示"),
     "send_seed": OptionInfo(True, "Send seed when sending prompt or image to other interface"),
     "send_size": OptionInfo(True, "Send size when sending prompt or image to another interface"),
     "enable_reloading_ui_scripts": OptionInfo(False, "Reload UI scripts when using Reload UI option").info("useful for developing: if you make changes to UI scripts code, it is applied when the UI is reloded."),
@@ -388,9 +388,9 @@ options_templates.update(options_section(('infotext', "Infotext", "ui"), {
 Infotext is what this software calls the text that contains generation parameters and can be used to generate the same picture again.
 It is displayed in UI below the image. To use infotext, paste it into the prompt and click the ↙️ paste button.
 """),
-    "enable_pnginfo": OptionInfo(True, "Write infotext to metadata of the generated image"),
+    "enable_pnginfo": OptionInfo(True, "生成画像のメタデータにインフォテキストを書き込む"),
     "stealth_pnginfo_opt": OptionInfo("None", "Stealth infotext mode", gr.Radio, {"choices": ["Alpha", "RGB", "None"]}).info("Ignored if infotext is disabled"),
-    "save_txt": OptionInfo(False, "Create a text file with infotext next to every generated image"),
+    "save_txt": OptionInfo(False, "生成画像の横にインフォテキストファイルを作成"),
 
     "add_model_name_to_info": OptionInfo(True, "Add model name to infotext"),
     "add_model_hash_to_info": OptionInfo(True, "Add model hash to infotext"),
@@ -410,12 +410,12 @@ It is displayed in UI below the image. To use infotext, paste it into the prompt
 }))
 
 options_templates.update(options_section(('ui', "Live previews", "ui"), {
-    "show_progressbar": OptionInfo(True, "Show progressbar"),
-    "live_previews_enable": OptionInfo(True, "Show live previews of the created image"),
+    "show_progressbar": OptionInfo(True, "プログレスバーを表示"),
+    "live_previews_enable": OptionInfo(True, "生成画像のライブプレビューを表示"),
     "live_previews_image_format": OptionInfo("png", "Live preview file format", gr.Radio, {"choices": ["jpeg", "png", "webp"]}),
-    "show_progress_grid": OptionInfo(True, "Show previews of all images generated in a batch as a grid"),
-    "show_progress_every_n_steps": OptionInfo(10, "Live preview display period", gr.Slider, {"minimum": -1, "maximum": 32, "step": 1}).info("in sampling steps - show new live preview image every N sampling steps; -1 = only show after completion of batch"),
-    "show_progress_type": OptionInfo("Approx NN", "Live preview method", gr.Radio, {"choices": ["Approx NN", "Approx cheap", "TAESD"]}).info("Approx NN: fast preview; TAESD = high-quality preview; Approx cheap = fastest but low-quality preview"),
+    "show_progress_grid": OptionInfo(True, "バッチ生成中の全画像をグリッドでプレビュー"),
+    "show_progress_every_n_steps": OptionInfo(10, "ライブプレビューの更新間隔(ステップ)", gr.Slider, {"minimum": -1, "maximum": 32, "step": 1}).info("in sampling steps - show new live preview image every N sampling steps; -1 = only show after completion of batch"),
+    "show_progress_type": OptionInfo("Approx NN", "ライブプレビュー方式", gr.Radio, {"choices": ["Approx NN", "Approx cheap", "TAESD"]}).info("Approx NN: fast preview; TAESD = high-quality preview; Approx cheap = fastest but low-quality preview"),
     "live_preview_allow_lowvram_full": OptionInfo(False, "Allow Full live preview method with lowvram/medvram").info("If not, Approx NN will be used instead; Full live preview method is very detrimental to speed if lowvram/medvram optimizations are enabled"),
     "live_preview_content": OptionInfo("Prompt", "Live preview subject", gr.Radio, {"choices": ["Combined", "Prompt", "Negative prompt"]}),
     "live_preview_refresh_period": OptionInfo(1000, "Progressbar and preview update period").info("in milliseconds"),
@@ -425,7 +425,7 @@ options_templates.update(options_section(('ui', "Live previews", "ui"), {
 }))
 
 options_templates.update(options_section(('sampler-params', "Sampler parameters", "sd"), {
-    "hide_samplers": OptionInfo([], "Hide samplers in user interface", gr.CheckboxGroup, lambda: {"choices": [x.name for x in shared_items.list_samplers()]}).needs_reload_ui(),
+    "hide_samplers": OptionInfo([], "UIで非表示にするサンプラー", gr.CheckboxGroup, lambda: {"choices": [x.name for x in shared_items.list_samplers()]}).needs_reload_ui(),
     "eta_ddim": OptionInfo(0.0, "Eta for DDIM", gr.Slider, {"minimum": 0.0, "maximum": 1.0, "step": 0.01}, infotext='Eta DDIM').info("noise multiplier; higher = more unpredictable results"),
     "ddim_discretize": OptionInfo('uniform', "img2img DDIM discretize", gr.Radio, {"choices": ['uniform', 'quad']}),
     "eta_ancestral": OptionInfo(1.0, "Eta for k-diffusion samplers", gr.Slider, {"minimum": 0.0, "maximum": 1.0, "step": 0.01}, infotext='Eta').info("noise multiplier; applies to ancestral samplers (Euler a, DPM++ 2S a) and SDE samplers"),

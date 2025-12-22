@@ -52,13 +52,13 @@ def txt2img_create_processing(id_task: str, request: gr.Request, prompt: str, ne
     p.user = request.username
 
     if shared.opts.enable_console_prompts:
-        print(f"\ntxt2img: {prompt}", file=shared.progress_print_out)
+        print(f"\ntxt2img生成開始: {prompt}", file=shared.progress_print_out)
 
     return p
 
 
 def txt2img_upscale_function(id_task: str, request: gr.Request, gallery, gallery_index, generation_info, *args):
-    assert len(gallery) > 0, 'No image to upscale'
+    assert len(gallery) > 0, 'アップスケールする画像がありません'
     assert 0 <= gallery_index < len(gallery), f'Bad image index: {gallery_index}'
 
     p = txt2img_create_processing(id_task, request, *args, force_enable_hr=True)
