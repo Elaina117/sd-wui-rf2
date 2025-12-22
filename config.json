@@ -216,7 +216,7 @@
     "lora_preferred_name": "Alias from file",
     "lora_add_hashes_to_infotext": true,
     "lora_bundled_ti_to_infotext": true,
-    "lora_show_all": false,
+    "lora_show_all": true,
     "lora_hide_unknown_for_versions": [],
     "lora_in_memory_limit": 0,
     "lora_not_found_warning_console": false,
