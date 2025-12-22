@@ -107,14 +107,14 @@ def validate_and_fix_vae(sd_model):
         return
         
     if not hasattr(sd_model.forge_objects, 'vae'):
-        print("Warning: Model has no VAE object")
+        print("警告: モデルにVAEオブジェクトがありません")
         return
         
     vae = sd_model.forge_objects.vae
     
     # Check model attribute exists
     if not hasattr(vae, 'model'):
-        print("Reloading VAE")
+        print("VAEを再読み込み中")
         sd_vae.delete_base_vae()
         sd_vae.clear_loaded_vae()
         vae_file, vae_source = sd_vae.resolve_vae(sd_model.sd_checkpoint_info.filename).tuple()
@@ -341,13 +341,13 @@ def select_checkpoint():
         return checkpoint_info
 
     if len(checkpoints_list) == 0:
-        error_message = "No checkpoints found. When searching for checkpoints, looked at:"
+        error_message = "チェックポイントが見つかりません。検索パス:"
         if shared.cmd_opts.ckpt is not None:
             error_message += f"\n - file {os.path.abspath(shared.cmd_opts.ckpt)}"
         error_message += f"\n - directory {model_path}"
         if shared.cmd_opts.ckpt_dir is not None:
             error_message += f"\n - directory {os.path.abspath(shared.cmd_opts.ckpt_dir)}"
-        error_message += "Can't run without a checkpoint. Find and place a .ckpt or .safetensors file into any of those locations."
+        error_message += "チェックポイントなしでは実行できません。.ckpt または .safetensors ファイルを配置してください。"
         raise FileNotFoundError(error_message)
 
     checkpoint_info = next(iter(checkpoints_list.values()))
@@ -456,7 +456,7 @@ def complete_model_teardown(model):
     elif hasattr(model, 'filename'):
         model_name = model.filename
         
-    print(f"Performing complete teardown of model: {model_name}")
+    print(f"モデルの完全破棄を実行中: {model_name}")
     
     # Create a set of objects to preserve (don't nullify these)
     preserve_attributes = set()
@@ -606,7 +606,7 @@ def complete_model_teardown(model):
     for _ in range(3):
         gc.collect()
         
-    print(f"Model teardown completed")
+    print(f"モデルの破棄が完了しました")
 
 # Global tracking to find leaks
 models_loaded_count = 0
@@ -624,7 +624,7 @@ def force_memory_deallocation():
     # 2. Clear all caches that might hold model references
     global checkpoints_loaded
     if len(checkpoints_loaded) > 0:
-        print(f"Clearing {len(checkpoints_loaded)} cached state dictionaries")
+        print(f"{len(checkpoints_loaded)} 個のキャッシュされた状態辞書をクリアします")
         checkpoints_loaded.clear()
     
     # 3. Clear checkpoints_list references to only keep essential information
@@ -686,7 +686,7 @@ def force_memory_deallocation():
         count = gc.collect()
         if count == 0:
             break
-        print(f"GC pass {i+1}: collected {count} objects")
+        print(f"GC パス {i+1}: {count} 個のオブジェクトを回収しました")
     
     # 7. Report memory change
     post_mem = process.memory_info().rss
@@ -709,7 +709,7 @@ def get_checkpoint_state_dict(checkpoint_info: CheckpointInfo, timer):
     timer.record("calculate hash")
     
     # Completely disable checkpoint caching - always load fresh
-    print(f"Loading weights [{sd_model_hash}] from {checkpoint_info.filename}")
+    print(f"重みをロード中 [{sd_model_hash}]: {checkpoint_info.filename}")
     
     # Use a more direct loading approach to avoid duplicate copies
     if checkpoint_info.is_safetensors:
@@ -840,9 +840,9 @@ def enable_midas_autodownload():
             if not os.path.exists(midas_path):
                 os.mkdir(midas_path)
 
-            print(f"Downloading midas model weights for {model_type} to {path}")
+            print(f"{model_type} 用のmidasモデルの重みを {path} にダウンロード中")
             request.urlretrieve(midas_urls[model_type], path)
-            print(f"{model_type} downloaded")
+            print(f"{model_type} のダウンロード完了")
 
         return midas.api.load_model_inner(model_type)
 
@@ -1047,14 +1047,14 @@ def clear_python_cache():
             except:
                 pass
     
-    print(f"Cleared {count} modules from Python module cache")
+    print(f"Pythonモジュールキャッシュから {count} 個のモジュールをクリアしました")
     return count
 
 def aggressive_memory_cleanup():
     """Perform aggressive memory cleanup to address RAM leaks - safer approach"""
     global checkpoints_loaded
     
-    print("Performing aggressive memory cleanup...")
+    print("積極的なメモリクリーンアップを実行中...")
     
     # 1. Clear checkpoint cache
     if len(checkpoints_loaded) > 0:
@@ -1114,7 +1114,7 @@ def load_model(checkpoint_info=None, already_loaded_state_dict=None, forced_relo
     timer.record("memory cleanup")
 
     current_loaded_models = len(model_data.loaded_sd_models)
-    print(f"Loading model {checkpoint_info.title} ({current_loaded_models + 1} of {shared.opts.sd_checkpoints_limit})")
+    print(f"モデルをロード中: {checkpoint_info.title} ({current_loaded_models + 1} / {shared.opts.sd_checkpoints_limit})")
 
     # State dict handling with explicit scoping
     sd_model = None
@@ -1170,12 +1170,12 @@ def load_model(checkpoint_info=None, already_loaded_state_dict=None, forced_relo
             sd_model.cond_stage_model_empty_prompt = get_empty_cond(sd_model)
         timer.record("calculate empty prompt")
 
-        print(f"Model {checkpoint_info.title} loaded in {timer.summary()}.")
+        print(f"モデル {checkpoint_info.title} のロード完了: {timer.summary()}")
         
         # One final cleanup to release any temporary objects
         force_memory_deallocation()
     else:
-        print("Error: Model failed to load")
+        print("エラー: モデルのロードに失敗しました")
 
     return sd_model
 
@@ -1189,7 +1189,7 @@ def set_model_active(model_index):
         return "Model index must be a number"
     
     if not model_data.loaded_sd_models:
-        return "No models currently loaded"
+        return "現在ロードされているモデルはありません"
     
     if model_index < 0 or model_index >= len(model_data.loaded_sd_models):
         return f"Invalid model index: {model_index}, valid range is 0-{len(model_data.loaded_sd_models)-1}"
@@ -1199,14 +1199,14 @@ def set_model_active(model_index):
     
     # If it's already active, no need to do anything
     if model_data.sd_model == model_to_activate:
-        return f"Model {model_to_activate.sd_checkpoint_info.title} is already active"
+        return f"モデル {model_to_activate.sd_checkpoint_info.title} は既にアクティブです"
     
     # Move the model to the front of the list and set it as active
     model_data.loaded_sd_models.remove(model_to_activate)
     model_data.loaded_sd_models.insert(0, model_to_activate)
     model_data.set_sd_model(model_to_activate, already_loaded=True)
     
-    return f"Activated model: {model_to_activate.sd_checkpoint_info.title}"
+    return f"モデルをアクティブ化しました: {model_to_activate.sd_checkpoint_info.title}"
 
 def unload_first_loaded_model():
     """Completely unload the first loaded model using aggressive teardown"""
@@ -1227,7 +1227,7 @@ def unload_first_loaded_model():
     else:
         model_name = "Unknown"
         
-    print(f"Unloading first loaded model: {model_name}")
+    print(f"最初にロードされたモデルをアンロード中: {model_name}")
     
     # Complete teardown of the model
     complete_model_teardown(first_loaded_model)
@@ -1275,7 +1275,7 @@ def unload_model_weights(model=None):
     model_management.soft_empty_cache(force=True)
     gc.collect()
     
-    return f"Unloaded model {model.sd_checkpoint_info.title} to RAM"
+    return f"モデル {model.sd_checkpoint_info.title} をRAMにアンロードしました"
 
 def load_model_to_device(model=None):
     """Load a model from RAM to VRAM"""
@@ -1293,18 +1293,18 @@ def load_model_to_device(model=None):
         device = model_management.get_torch_device()
         model.to(device)
     
-    return f"Loaded model {model.sd_checkpoint_info.title} to device"
+    return f"モデル {model.sd_checkpoint_info.title} をデバイスにロードしました"
 
 def list_loaded_models():
     """Return a list of all currently loaded models"""
     if not model_data.loaded_sd_models:
-        return "No models currently loaded"
+        return "現在ロードされているモデルはありません"
     
     import psutil
     process = psutil.Process()
     total_ram = process.memory_info().rss / (1024 * 1024 * 1024)
     
-    result = f"Currently loaded models (Total RAM: {total_ram:.2f} GB):\n"
+    result = f"現在ロードされているモデル (合計RAM: {total_ram:.2f} GB):\n"
     for i, model in enumerate(model_data.loaded_sd_models):
         active = " (active)" if model == model_data.sd_model else ""
         result += f"[{i}] {model.sd_checkpoint_info.title}{active}\n"
@@ -1319,7 +1319,7 @@ def unload_specific_model(model_index):
         return "Model index must be a number"
     
     if not model_data.loaded_sd_models:
-        return "No models currently loaded"
+        return "現在ロードされているモデルはありません"
     
     if model_index < 0 or model_index >= len(model_data.loaded_sd_models):
         return f"Invalid model index: {model_index}, valid range is 0-{len(model_data.loaded_sd_models)-1}"
@@ -1355,9 +1355,9 @@ def unload_specific_model(model_index):
     model_management.soft_empty_cache(force=True)
     gc.collect()
     
-    status = f"Unloaded model: {name}"
+    status = f"モデルをアンロードしました: {name}"
     if is_active and len(model_data.loaded_sd_models) == 0:
-        status += "\nWarning: No active model remaining"
+        status += "\n警告: アクティブなモデルが残っていません"
     
     return status
 
