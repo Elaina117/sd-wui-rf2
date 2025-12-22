@@ -1122,17 +1122,17 @@ def create_ui():
     interfaces = [
         (txt2img_interface, "txt2img", "txt2img"),
         (img2img_interface, "img2img", "img2img"),
-        (extras_interface, "Extras", "extras"),
-        (pnginfo_interface, "PNG Info", "pnginfo"),
+        (extras_interface, "エクストラ", "extras"),
+        (pnginfo_interface, "PNG情報", "pnginfo"),
         (modelmerger_ui.blocks, "Checkpoint Merger", "modelmerger"),
-        (train_interface, "Train", "train"),
+        (train_interface, "学習", "train"),
     ]
 
     interfaces += script_callbacks.ui_tabs_callback()
-    interfaces += [(settings.interface, "Settings", "settings")]
+    interfaces += [(settings.interface, "設定", "settings")]
 
     extensions_interface = ui_extensions.create_ui()
-    interfaces += [(extensions_interface, "Extensions", "extensions")]
+    interfaces += [(extensions_interface, "拡張機能", "extensions")]
 
     shared.tab_names = []
     for _interface, label, _ifid in interfaces:
