@@ -100,19 +100,19 @@ printf "\n%s\n" "${delimiter}"
 if [[ $(id -u) -eq 0 && can_run_as_root -eq 0 ]]
 then
     printf "\n%s\n" "${delimiter}"
-    printf "\e[1m\e[31mERROR: This script must not be launched as root, aborting...\e[0m"
+    printf "\033[1m\033[31mERROR: This script must not be launched as root, aborting...\033[0m"
     printf "\n%s\n" "${delimiter}"
     exit 1
 else
     printf "\n%s\n" "${delimiter}"
-    printf "Running on \e[1m\e[32m%s\e[0m user" "$(whoami)"
+    printf "Running on \033[1m\033[32m%s\033[0m user" "$(whoami)"
     printf "\n%s\n" "${delimiter}"
 fi
 
 if [[ $(getconf LONG_BIT) = 32 ]]
 then
     printf "\n%s\n" "${delimiter}"
-    printf "\e[1m\e[31mERROR: Unsupported Running on a 32bit OS\e[0m"
+    printf "\033[1m\033[31mERROR: Unsupported Running on a 32bit OS\033[0m"
     printf "\n%s\n" "${delimiter}"
     exit 1
 fi
