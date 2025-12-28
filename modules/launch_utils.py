@@ -47,11 +47,11 @@ def check_python_version():
         errors.print_error_explanation(f"""
 INCOMPATIBLE PYTHON VERSION
 
-This program is tested with 3.10.6 Python, but you have {major}.{minor}.{micro}.
-If you encounter an error with "RuntimeError: Couldn't install torch." message,
+このプログラムはPython 3.10.6でテストされていますが、現在のバージョンは {major}.{minor}.{micro} です。
+"RuntimeError: Couldn't install torch." 等のエラーが発生した場合、
 or any other error regarding unsuccessful package (library) installation,
-please downgrade (or upgrade) to the latest version of 3.10 Python
-and delete current Python and "venv" folder in WebUI's directory.
+Python 3.10 の最新版にダウングレード（またはアップグレード）し、
+WebUIディレクトリ内の "venv" フォルダを削除してください。
 
 You can download 3.10 Python from here: https://www.python.org/downloads/release/python-3106/
 
@@ -206,9 +206,9 @@ def git_pull_recursive(dir):
         if os.path.exists(os.path.join(subdir, '.git')):
             try:
                 output = subprocess.check_output([git, '-C', subdir, 'pull', '--autostash'])
-                print(f"Pulled changes for repository in '{subdir}':\n{output.decode('utf-8').strip()}\n")
+                print(f"リポジトリ '{subdir}' の変更をプルしました:\n{output.decode('utf-8').strip()}\n")
             except subprocess.CalledProcessError as e:
-                print(f"Couldn't perform 'git pull' on repository in '{subdir}':\n{e.output.decode('utf-8').strip()}\n")
+                print(f"リポジトリ '{subdir}' で 'git pull' を実行できませんでした:\n{e.output.decode('utf-8').strip()}\n")
 
 
 def version_check(commit):
@@ -217,13 +217,13 @@ def version_check(commit):
         commits = requests.get('https://api.github.com/repos/AUTOMATIC1111/stable-diffusion-webui/branches/master').json()
         if commit != "<none>" and commits['commit']['sha'] != commit:
             print("--------------------------------------------------------")
-            print("| You are not up to date with the most recent release. |")
-            print("| Consider running `git pull` to update.               |")
+            print("| 最新リリースではありません。                           |")
+            print("| `git pull` を実行して更新することを検討してください。   |")
             print("--------------------------------------------------------")
         elif commits['commit']['sha'] == commit:
-            print("You are up to date with the most recent release.")
+            print("最新リリースを使用しています。")
         else:
-            print("Not a git clone, can't perform version check.")
+            print("gitクローンではないため、バージョンチェックを実行できません。")
     except Exception as e:
         print("version check failed", e)
 
@@ -501,7 +501,7 @@ def prepare_environment():
         startup_timer.record("update extensions")
 
     if "--exit" in sys.argv:
-        print("Exiting because of --exit argument")
+        print("--exit 引数が指定されたため終了します")
         exit(0)
 
 
@@ -552,7 +552,7 @@ def configure_forge_reference_checkout(a1111_home: Path):
 
 
 def start():
-    print(f"Launching {'API server' if '--nowebui' in sys.argv else 'Web UI'} with arguments: {shlex.join(sys.argv[1:])}")
+    print(f"{'APIサーバー' if '--nowebui' in sys.argv else 'Web UI'} を起動中 (引数: {shlex.join(sys.argv[1:])})")
     import wui
     if '--nowebui' in sys.argv:
         wui.api_only()

@@ -41,9 +41,9 @@ def maybe_override_text_encoder(forge_objects, checkpoint_info):
         # If CLIP is None (was skipped during loading), we must load a separate TE
         if forge_objects.clip is None:
             should_use_separate_te = True
-            print("No checkpoint CLIP loaded - must use separate text encoder")
+            print("チェックポイントのCLIPがロードされていません - 別のテキストエンコーダーを使用する必要があります")
             if text_encoder_option == 'None':
-                raise RuntimeError("Cannot use 'None' text encoder option when checkpoint CLIP was not loaded")
+                raise RuntimeError("チェックポイントのCLIPがロードされていないため、テキストエンコーダーオプションを'None'にすることはできません")
         else:
             # Normal case: checkpoint CLIP was loaded, decide whether to replace it
             if text_encoder_option == 'None':
@@ -59,14 +59,14 @@ def maybe_override_text_encoder(forge_objects, checkpoint_info):
                     # Check if the selected TE is the same as the checkpoint
                     if checkpoint_info and matching_te.te_info.model_name == checkpoint_info.model_name:
                         # Same model - use checkpoint's built-in TE
-                        print(f"Selected text encoder matches checkpoint model - using checkpoint's built-in text encoder")
+                        print(f"選択されたテキストエンコーダーがチェックポイントモデルと一致します - チェックポイント内蔵のテキストエンコーダーを使用します")
                         return forge_objects
                     else:
                         # Different model - use separate TE
                         should_use_separate_te = True
                         selected_option = matching_te
                 else:
-                    print(f"Warning: Text encoder '{text_encoder_option}' not found, using checkpoint's built-in text encoder")
+                    print(f"警告: テキストエンコーダー '{text_encoder_option}' が見つかりません。チェックポイント内蔵のものを使用します")
                     return forge_objects
         
         # If we reach here and should_use_separate_te is False, return original
@@ -82,9 +82,9 @@ def maybe_override_text_encoder(forge_objects, checkpoint_info):
                     # Fallback: use the first available text encoder if none match
                     if sd_text_encoder.text_encoder_options:
                         selected_option = sd_text_encoder.text_encoder_options[0]
-                        print(f"No matching TE found, using first available: {selected_option.label}")
+                        print(f"一致するテキストエンコーダーが見つかりません。最初に利用可能なものを使用します: {selected_option.label}")
                     else:
-                        raise RuntimeError("No text encoders available and checkpoint CLIP was not loaded")
+                        raise RuntimeError("利用可能なテキストエンコーダーがなく、チェックポイントのCLIPもロードされていません")
                 else:
                     selected_option = matching_options[0]
             else:
@@ -96,14 +96,14 @@ def maybe_override_text_encoder(forge_objects, checkpoint_info):
         original_clip = forge_objects.clip
         
         # Load the separate text encoder
-        print(f"Loading separate text encoder: {selected_option.label}")
+        print(f"個別のテキストエンコーダーをロード中: {selected_option.label}")
         separate_te = selected_option.create_text_encoder()
         separate_te.option = selected_option  # Add option reference
         separate_te._load_clip_from_checkpoint()  # Force load
         
         # Replace the CLIP in forge_objects
         if separate_te.clip_model is not None:
-            print(f"Replacing text encoder with: {selected_option.label}")
+            print(f"テキストエンコーダーを置換中: {selected_option.label}")
             forge_objects.clip = separate_te.clip_model
             # Mark that we've loaded a separate TE to avoid double-loading later
             forge_objects._separate_te_loaded = True
@@ -112,11 +112,11 @@ def maybe_override_text_encoder(forge_objects, checkpoint_info):
             from modules import sd_text_encoder
             sd_text_encoder.current_text_encoder_option = selected_option
             sd_text_encoder.current_text_encoder = separate_te
-            print(f"Updated global TE state to: {selected_option.label}")
+            print(f"グローバルTE状態を更新しました: {selected_option.label}")
             
             # Properly unload the original CLIP model to free VRAM (only if it exists)
             if original_clip is not None and original_clip != separate_te.clip_model:
-                print("Unloading original text encoder to free VRAM")
+                print("VRAM解放のため元のテキストエンコーダーをアンロード中")
                 
                 # Unload model from VRAM if it has a patcher
                 if hasattr(original_clip, 'patcher'):
@@ -208,7 +208,7 @@ def no_clip():
 def model_detection_error_hint(path, state_dict):
     filename = os.path.basename(path)
     if 'lora' in filename.lower():
-        return "\nHINT: This seems to be a Lora file and Lora files should be put in the lora folder and loaded via <lora:loraname:lorastrength>..."
+        return "\nヒント: これはLoRAファイルのようです。LoRAファイルはloraフォルダに配置し、<lora:名前:強度>形式でロードしてください..."
     return ""
 
 def load_checkpoint_guess_config(ckpt, output_vae=True, output_clip=True, output_clipvision=False, embedding_directory=None, output_model=True, model_options={}, te_model_options={}):
@@ -245,7 +245,7 @@ def load_state_dict_guess_config(sd, output_vae=True, output_clip=True, output_c
 
     model_config = model_detection.model_config_from_unet(sd, diffusion_model_prefix, metadata=metadata)
     if model_config is None:
-        logging.warning("Warning, This is not a checkpoint file, trying to load it as a diffusion model only.")
+        logging.warning("警告: これはチェックポイントファイルではありません。拡散モデルとしてのみロードを試みます。")
         diffusion_model = load_diffusion_model_state_dict(sd, model_options={})
         if diffusion_model is None:
             return None
@@ -296,7 +296,7 @@ def load_state_dict_guess_config(sd, output_vae=True, output_clip=True, output_c
                 if len(u) > 0:
                     logging.debug("clip unexpected {}:".format(u))
             else:
-                logging.warning("no CLIP/text encoder weights in checkpoint, the text encoder model will not be loaded.")
+                logging.warning("チェックポイントにCLIP/テキストエンコーダーの重みがありません。テキストエンコーダーはロードされません。")
 
     left_over = sd.keys()
     if len(left_over) > 0:
@@ -305,7 +305,7 @@ def load_state_dict_guess_config(sd, output_vae=True, output_clip=True, output_c
     if output_model:
         model_patcher = UnetPatcher(model, load_device=load_device, offload_device=model_management.unet_offload_device())
         if inital_load_device != torch.device("cpu"):
-            print("loaded diffusion model directly to GPU")
+            print("拡散モデルを直接GPUにロードしました")
             model_management.load_models_gpu([model_patcher], force_full_load=True)
 
     return ForgeSD(model_patcher, clip, vae, clipvision)
@@ -419,13 +419,13 @@ def load_model_for_a1111(timer, checkpoint_info=None, state_dict=None):
             matching_options = [x for x in sd_text_encoder.text_encoder_options if x.model_name == model_name]
             if matching_options:
                 should_skip_clip = True
-                print(f"Skipping checkpoint CLIP loading - will use separate TE: {matching_options[0].label}")
+                print(f"チェックポイントのCLIPロードをスキップします - 個別のTEを使用します: {matching_options[0].label}")
         # If explicitly set to use a separate TE, also skip
         elif text_encoder_option != 'None' and text_encoder_option != 'Automatic':
             separate_option = next((x for x in sd_text_encoder.text_encoder_options if x.label == text_encoder_option), None)
             if separate_option:
                 should_skip_clip = True
-                print(f"Skipping checkpoint CLIP loading - will use separate TE: {text_encoder_option}")
+                print(f"チェックポイントのCLIPロードをスキップします - 個別のTEを使用します: {text_encoder_option}")
     except Exception as e:
         print(f"Warning: Error checking text encoder options: {e}")
         should_skip_clip = False
