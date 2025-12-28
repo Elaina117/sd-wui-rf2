@@ -52,7 +52,7 @@ def main():
             if len(msg) > 120: msg = msg[:115] + "..."
             # WebUIのログ制御を回避するため、システムの標準出力に直接書き込む
             fp = sys.__stdout__
-            fp.write('\\r' + msg + '      ')
+            fp.write('\r' + msg + '      ')
             fp.flush()
             return True
 
